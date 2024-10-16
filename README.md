@@ -43,10 +43,10 @@ return $panel->plugins([
     JwNotificationsPlugin::make()
         ->notifications([
             OnboardingFormSubmittedNotification::class => 'customer',
-            NewMessageReceived::class                     => 'customer',
-            BirthdayNotification::class               => 'customer',
-            LicenseExpiresNotification::class             => 'license',
-            LicenseExpiredNotification::class             => 'license',
+            NewMessageReceived::class                  => 'customer',
+            BirthdayNotification::class                => 'customer',
+            LicenseExpiresNotification::class          => 'license',
+            LicenseExpiredNotification::class          => 'license',
         ])
         ->channels(fn () => [
             'database'        => 'ToDo',
