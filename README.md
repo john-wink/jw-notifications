@@ -38,6 +38,18 @@ return [
 
 ## Usage
 
+Replace the via() function within Notifications that you want to use with this trait:
+```php
+    use \JohnWink\JwNotifications\Traits\HasCustomizedChannels;
+```
+
+Add the following trait to the user:
+```php
+    use \JohnWink\JwNotifications\Traits\CanSubscribeToChannels;
+```
+
+Configure the FilamentPanels according to this example:
+Replace the notifications with your own notifications and the channels with your own channels that you have installed and configured.
 ```php
 return $panel->plugins([
     JwNotificationsPlugin::make()
