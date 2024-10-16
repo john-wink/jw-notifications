@@ -42,12 +42,16 @@ return [
 return $panel->plugins([
     JwNotificationsPlugin::make()
         ->notifications([
-            NewOnboardingFormSubmittedNotification::class => 'customer',            NewMessageReceived::class                     => 'customer',            BirthdayTodoNotification::class               => 'customer',            LicenseExpiresNotification::class             => 'license',         LicenseExpiredNotification::class             => 'license',         CheckinSubmittedNotification::class           => 'checkin',     NoCheckinFiveDaysNotifiaction::class          => 'checkin',          NoWorkoutSevenDaysNotification::class         => 'workout',     SessionFinishedNotification::class            => 'workout',       WorkoutExpiresNotification::class             => 'workout',         WorkoutExpiredNotification::class             => 'workout',            MealPlanExpiresNotification::class            => 'nutrition',           MealPlanExpiredNotification::class            => 'nutrition',
+            OnboardingFormSubmittedNotification::class => 'customer',
+            NewMessageReceived::class                     => 'customer',
+            BirthdayNotification::class               => 'customer',
+            LicenseExpiresNotification::class             => 'license',
+            LicenseExpiredNotification::class             => 'license',
         ])
         ->channels(fn () => [
-            'database'        => 'ToDo-Board',
-            FcmChannel::class => 'Push (App)',
-            'mail'            => 'E-Mail',
+            'database'        => 'ToDo',
+            FcmChannel::class => 'Push',
+            'mail'            => 'Email',
         ]),
     ]);
 ```
