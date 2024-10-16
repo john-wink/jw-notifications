@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create(config('jw-notifications.table'), function (Blueprint $table) {
+            $table->id();
+            $cls = config("jw-notifications.notifiable");
+            $notifiable = new $cls();
+            $notifiable->getKeyName();
+            if($notifiable->getKeyType() === 'int'){
+                $table->foreignIdFor($cls)->constrained($notifiable->getTable())->cascadeOnUpdate()->cascadeOnDelete();
+                $table->foreignIdFor($cls, 'redirect_uuid')->nullable()->constrained($notifiable->getTable())->cascadeOnUpdate()->cascadeOnDelete();
+            }else{
+                $table->foreignUuidFor($cls)->constrained($notifiable->getTable())->cascadeOnUpdate()->cascadeOnDelete();
+                $table->foreignUuidFor($cls, 'redirect_uuid')->nullable()->constrained($notifiable->getTable())->cascadeOnUpdate()->cascadeOnDelete();
+            }
+            $table->string('notification');
+            $table->string('channel');
+            $table->boolean('is_subscribed')->default(false);
+            $table->timestampTz('paused_until')->nullable();
+            $table->timestampsTz();
+            $table->softDeletesTz();
+        });
+    }
+    public function down(): void
+    {
+        Schema::dropIfExists(config('jw-notifications.table'));
+    }
+};
