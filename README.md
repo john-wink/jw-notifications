@@ -56,15 +56,14 @@ Replace the notifications with your own notifications and the channels with your
 return $panel->plugins([
     JwNotificationsPlugin::make()
         ->notifications([
-            OnboardingFormSubmittedNotification::class => 'customer',
-            NewMessageReceived::class                  => 'customer',
-            BirthdayNotification::class                => 'customer',
-            LicenseExpiresNotification::class          => 'license',
-            LicenseExpiredNotification::class          => 'license',
+            /*
+            * Add here your Notifications Channels
+            * The Notification Channel should use the Trait: 
+            * \JohnWink\JwNotifications\Traits\HasCustomizedChannels
+            */
         ])
         ->channels(fn () => [
-            'database'        => 'ToDo',
-            FcmChannel::class => 'Push',
+            'database'        => 'Database',
             'mail'            => 'Email',
         ]),
     ]);
