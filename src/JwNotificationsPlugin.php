@@ -50,7 +50,7 @@ class JwNotificationsPlugin implements Plugin
                     ->label(fn () => __($this->navigationLabel))
                     ->icon($this->navigationIcon)
                     ->color($this->navigationColor)
-                    ->url(fn () => NotificationsPage::getUrl(tenant: Filament::getTenant())),
+                    ->url(fn () => NotificationsPage::getUrl(tenant: Filament::hasTenancy() ? Filament::getTenant() : null)),
             ])
             ->pages([
                 NotificationsPage::class,
