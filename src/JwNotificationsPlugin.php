@@ -44,17 +44,19 @@ class JwNotificationsPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        $panel
-            ->userMenuItems([
-                'notifications' => MenuItem::make()
-                    ->label(fn () => __($this->navigationLabel))
-                    ->icon($this->navigationIcon)
-                    ->color($this->navigationColor)
-                    ->url(fn () => NotificationsPage::getUrl(tenant: Filament::hasTenancy() ? Filament::getTenant() : null)),
-            ])
-            ->pages([
-                NotificationsPage::class,
-            ]);
+        if ($panel->hasPlugin('jw-notifications')) {
+            $panel
+                ->userMenuItems([
+                    'notifications' => MenuItem::make()
+                        ->label(fn () => __($this->navigationLabel))
+                        ->icon($this->navigationIcon)
+                        ->color($this->navigationColor)
+                        ->url(fn () => NotificationsPage::getUrl(tenant: Filament::hasTenancy() ? Filament::getTenant() : null)),
+                ])
+                ->pages([
+                    NotificationsPage::class,
+                ]);
+        }
     }
 
     public function boot(Panel $panel): void {}
