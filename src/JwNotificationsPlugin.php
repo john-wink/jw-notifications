@@ -24,7 +24,7 @@ class JwNotificationsPlugin implements Plugin
 
     public string $navigationColor = 'info';
 
-    public $model = SubscribedChannels;
+    public $model = JohnWink\JwNotifications\Models\SubscribedChannels;
 
     public static function make(): static
     {
