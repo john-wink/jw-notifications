@@ -96,7 +96,7 @@ class NotificationsPage extends Page implements HasForms
                 $key = str($notification)->afterLast('\\')->camel()->toString();
 
                 $notifications[] = ToggleButtons::make($notification)
-                    ->label(__('notifications.label.' . $key))
+                    ->label(__($key))
                     ->inlineLabel()
                     ->extraAttributes(['class' => '!flex !w-full'])
                     ->grouped()
@@ -112,14 +112,14 @@ class NotificationsPage extends Page implements HasForms
                         ->collapsible()
                         ->persistCollapsed()
                         ->compact()
-                        ->heading(__('notifications.section.' . str($sectionKey)->lower()->toString()))
+                        ->heading(__(str($sectionKey)->toString()))
                         ->compact();
                 }
 
                 $key = str($notification)->afterLast('\\')->camel()->toString();
 
                 $notifications[$sectionKey][] = ToggleButtons::make($notification)
-                    ->label(__('notifications.label.' . $key))
+                    ->label(__($key))
                     ->inlineLabel()
                     ->extraAttributes(['class' => '!flex !w-full'])
                     ->grouped()
