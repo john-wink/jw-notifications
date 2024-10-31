@@ -24,6 +24,8 @@ class JwNotificationsPlugin implements Plugin
 
     public string $navigationColor = 'info';
 
+    public $model = SubscribedChannels;
+
     public static function make(): static
     {
         return app(static::class);
@@ -90,6 +92,13 @@ class JwNotificationsPlugin implements Plugin
     public function channelColors(array|Arrayable|Closure|null $colors)
     {
         $this->channelColors = $colors;
+
+        return $this;
+    }
+
+    public function model($model)
+    {
+        $this->model = $model;
 
         return $this;
     }

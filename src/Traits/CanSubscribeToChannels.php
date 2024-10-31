@@ -6,7 +6,6 @@ namespace JohnWink\JwNotifications\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use JohnWink\JwNotifications\Models\SubscribedChannels;
 
 trait CanSubscribeToChannels
 {
@@ -29,7 +28,7 @@ trait CanSubscribeToChannels
 
     public function notificationChannels(): HasMany
     {
-        return $this->hasMany(SubscribedChannels::class);
+        return $this->hasMany(filament('jw-notifications')->model);
     }
 
     public function channelSubscribed(string $notification, string $channel): bool

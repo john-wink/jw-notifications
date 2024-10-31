@@ -14,7 +14,6 @@ use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use JohnWink\JwNotifications\Models\SubscribedChannels;
 
 class NotificationsPage extends Page implements HasForms
 {
@@ -59,13 +58,13 @@ class NotificationsPage extends Page implements HasForms
         foreach ($notifications as $notification => $channels) {
             if (class_exists($notification)) {
                 DB::transaction(function () use ($notification, $channels, &$dump) {
-                    SubscribedChannels::where([
+                    filament('jw-notifications')->model::where([
                         ['user_id', auth()->id()],
                         ['notification', $notification],
                     ])->update(['is_subscribed' => false]);
                     $dump[$notification] = $channels;
                     foreach ($channels as $channel) {
-                        SubscribedChannels::updateOrCreate([
+                        filament('jw-notifications')->model::updateOrCreate([
                             'user_id'      => auth()->id(),
                             'notification' => $notification,
                             'channel'      => $channel,
