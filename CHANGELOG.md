@@ -2,6 +2,10 @@
 
 All notable changes to `jw-notifications` will be documented in this file.
 
+## 1.0.2 - 2024-10-31
+
+Makel Model Customizable
+
 ## 1.0.1 - 2024-10-31
 
 ### What's Changed
