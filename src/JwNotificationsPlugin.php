@@ -3,12 +3,13 @@
 namespace JohnWink\JwNotifications;
 
 use Closure;
+use Filament\Actions\Action;
 use Filament\Contracts\Plugin;
 use Filament\Facades\Filament;
-use Filament\Navigation\MenuItem;
 use Filament\Panel;
 use Illuminate\Contracts\Support\Arrayable;
 use JohnWink\JwNotifications\Filament\Pages\NotificationsPage;
+use JohnWink\JwNotifications\Models\SubscribedChannels;
 
 class JwNotificationsPlugin implements Plugin
 {
@@ -24,7 +25,7 @@ class JwNotificationsPlugin implements Plugin
 
     public string $navigationColor = 'info';
 
-    public $model = \JohnWink\JwNotifications\Models\SubscribedChannels::class;
+    public $model = SubscribedChannels::class;
 
     public static function make(): static
     {
@@ -48,7 +49,7 @@ class JwNotificationsPlugin implements Plugin
     {
         $panel
             ->userMenuItems([
-                'notifications' => MenuItem::make()
+                'notifications' => Action::make('notifications')
                     ->label(fn () => __($this->navigationLabel))
                     ->icon($this->navigationIcon)
                     ->color($this->navigationColor)

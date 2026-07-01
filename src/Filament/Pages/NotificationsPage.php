@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace JohnWink\JwNotifications\Filament\Pages;
 
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use JohnWink\JwNotifications\JwNotificationsPlugin;
 
 class NotificationsPage extends Page implements HasForms
 {
@@ -21,7 +22,7 @@ class NotificationsPage extends Page implements HasForms
 
     public ?array $data = [];
 
-    protected static string $view = 'jw-notifications::filament.pages.notifications-page';
+    protected string $view = 'jw-notifications::filament.pages.notifications-page';
 
     protected static bool $shouldRegisterNavigation = false;
 
@@ -41,7 +42,7 @@ class NotificationsPage extends Page implements HasForms
     {
         $subscribed = Auth::user()->subscribedNotificationChannels()->get()
             ->groupBy('notification')->map(fn ($i) => $i->pluck('channel')->toArray())->toArray();
-        foreach (filament('jw-notifications')->notifications as $notification => $sct) {
+        foreach (JwNotificationsPlugin::get()->notifications as $notification => $sct) {
             if (isset($subscribed[$notification])) {
                 $section[$notification] = $subscribed[$notification];
             } else {
@@ -58,13 +59,13 @@ class NotificationsPage extends Page implements HasForms
         foreach ($notifications as $notification => $channels) {
             if (class_exists($notification)) {
                 DB::transaction(function () use ($notification, $channels, &$dump) {
-                    filament('jw-notifications')->model::where([
+                    JwNotificationsPlugin::get()->model::where([
                         ['user_id', auth()->id()],
                         ['notification', $notification],
                     ])->update(['is_subscribed' => false]);
                     $dump[$notification] = $channels;
                     foreach ($channels as $channel) {
-                        filament('jw-notifications')->model::updateOrCreate([
+                        JwNotificationsPlugin::get()->model::updateOrCreate([
                             'user_id'      => auth()->id(),
                             'notification' => $notification,
                             'channel'      => $channel,
@@ -82,16 +83,17 @@ class NotificationsPage extends Page implements HasForms
             ->send();
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form->schema($this->getFormSchema())->statePath('data');
+        return $schema->components($this->getFormSchema())->statePath('data');
     }
 
     public function getFormSchema(): array
     {
-        $section = [];
-        if (array_values(filament('jw-notifications')->notifications) === filament('jw-notifications')->notifications) {
-            foreach (filament('jw-notifications')->notifications as $notification) {
+        $section       = [];
+        $notifications = [];
+        if (array_values(JwNotificationsPlugin::get()->notifications) === JwNotificationsPlugin::get()->notifications) {
+            foreach (JwNotificationsPlugin::get()->notifications as $notification) {
                 $key = str($notification)->afterLast('\\')->camel()->toString();
 
                 $notifications[] = ToggleButtons::make($notification)
@@ -99,13 +101,13 @@ class NotificationsPage extends Page implements HasForms
                     ->inlineLabel()
                     ->extraAttributes(['class' => '!flex !w-full'])
                     ->grouped()
-                    ->colors(filament('jw-notifications')->channelColors)
-                    ->options(filament('jw-notifications')->channelOptions)
+                    ->colors(JwNotificationsPlugin::get()->channelColors)
+                    ->options(JwNotificationsPlugin::get()->channelOptions)
                     ->multiple();
             }
             $section = $notifications;
         } else {
-            foreach (filament('jw-notifications')->notifications as $notification => $sectionKey) {
+            foreach (JwNotificationsPlugin::get()->notifications as $notification => $sectionKey) {
                 if ( ! isset($section[$sectionKey])) {
                     $section[$sectionKey] = Section::make('section-' . $sectionKey)
                         ->collapsible()
@@ -122,11 +124,11 @@ class NotificationsPage extends Page implements HasForms
                     ->inlineLabel()
                     ->extraAttributes(['class' => '!flex !w-full'])
                     ->grouped()
-                    ->colors(filament('jw-notifications')->channelColors)
-                    ->options(filament('jw-notifications')->channelOptions)
+                    ->colors(JwNotificationsPlugin::get()->channelColors)
+                    ->options(JwNotificationsPlugin::get()->channelOptions)
                     ->multiple();
             }
-            foreach ($notifications ?? [] as $sectionKey => $sectionNotifications) {
+            foreach ($notifications as $sectionKey => $sectionNotifications) {
                 $section[$sectionKey]->schema($sectionNotifications);
             }
         }
